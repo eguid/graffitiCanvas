@@ -1,0 +1,154 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="utf-8">
+<title>测试拖拽绘图</title>
+<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<body>
+<div>操作方式：
+<p>选择要画的图形（除了多边形），在绘制区域按住鼠标左键不放，移动鼠标即时绘制图形，松开鼠标左键结束绘制</p>
+<p>进行多边形绘制时，多次点击以确定每个角的点，右键结束多边形绘制</p>
+<p>注意：鼠标越出绘制区域会自动结束绘制</p>
+</div>
+<div class="form-group">
+<button type="button" class="btn btn-warning" id="drawPen">画笔</button>
+<button type="button" class="btn btn-warning" id="drawLine">绘制线条</button>
+<button type="button" class="btn btn-warning" id="drawArror">绘制箭头</button>
+<button type="button" class="btn btn-warning" id="drawTriangle">绘制三角形</button>
+<button type="button" class="btn btn-warning" id="drawRect">绘制矩形</button>
+<button type="button" class="btn btn-warning" id="drawParallel">绘制平行四边形</button>
+<button type="button" class="btn btn-warning" id="drawTrape">绘制梯形</button>
+<a id="drawPolygon" tabindex="0" class="btn btn-warning" role="button" data-toggle="popover"  data-placement="bottom" data-trigger="focus" data-content="点击鼠标右键结束多边形绘制">绘制多边形</a>
+<button type="button" class="btn btn-warning" id="drawCircle">绘制圆</button>
+<button type="button" class="btn btn-primary" id="no-drawing">手型选择</button>
+<button type="button" class="btn btn-danger" id="clearAll">清空</button>
+</div>
+<div style="">
+<canvas id="calibrationCanvas" width="352" height="288" style="width:352px;height:288px;display: block;margin:5px auto;border:1px solid red;">你的浏览器不支持绘图，请更换浏览器后重试！</canvas>
+</div>
+<div class="form-inline">
+<label for="pictureurl">背景图片</label>
+<input id="pictureurl" class="form-control" name="pictureurl" value="http://eguid.cc/img/cv.jpg">
+<button id="changeImg"  type="button" class="btn btn-primary">切换图片</button>
+</div>
+<div class="form-inline">
+<label for="pictureurl">画笔粗度</label>
+<input id="lineWidth" type="number"  value="1"/>
+<label for="pictureurl">画笔颜色</label>
+<input id="strokeStyle" type="color" id="color"  value="#ff0000" />
+<label for="pictureurl">填充颜色</label>
+<input id="fillStyle" type="color" id="color"  value="#ff0000" />
+<button id="changeStyle"  type="button" class="btn btn-primary">设置</button>
+<button type="button" class="btn btn-primary" id="save">保存设置</button>
+<button type="button" class="btn btn-warning" id="restore">恢复到上一次保存的设置</button>
+<button id="enIsFill"  type="button" class="btn btn-primary">允许使用填充色</button>
+<button id="disIsFill"  type="button" class="btn btn-primary">禁止使用填充色</button>
+<button id="enableContinus"  type="button" class="btn btn-primary">开启连续绘图模式</button>
+<button id="disableContinus"  type="button" class="btn btn-primary">禁止连续绘图模式</button>
+</div>
+
+</body>
+<!-- 拖拽式绘图 -->
+<script type="text/javascript" src="GraffitiCanvas.js" charset="utf-8"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+//使用demo
+var drawUtil=new GraffitiCanvas();
+if(drawUtil.init({'id':'calibrationCanvas'})){
+	//加载图片
+	var imgsrc=$("#pictureurl").val();
+	if(!drawUtil.isNull(imgsrc)){
+		drawUtil.setBgPic(imgsrc,true);
+	}
+}
+$("#enableContinus").click(function(){
+	alert(drawUtil.isContinuous(true));
+});
+$("#disableContinus").click(function(){
+	alert(drawUtil.isContinuous(false));
+});
+$("#save").click(function(){
+	drawUtil.save();
+});
+$("#restore").click(function(){
+	drawUtil.restore();
+})
+$("#enIsFill").click(function(){
+	drawUtil.enableFillStyle(true);
+});
+$("#disIsFill").click(function(){
+	drawUtil.enableFillStyle(false);
+});
+
+$("#changeImg").click(function(){
+	var imgsrc=$("#pictureurl").val();
+	if(!drawUtil.isNull(imgsrc)){
+		drawUtil.setBgPic(imgsrc,true);
+	}
+});
+//切换笔触样式
+$("#changeStyle").click(function(){
+	var lineWidth=$("#lineWidth").val();
+	var strokeStyle=$("#strokeStyle").val();
+	var fillStyle=$("#fillStyle").val();
+	drawUtil.setPaintConfig({
+		lineWidth:lineWidth,
+		strokeStyle:strokeStyle,
+		fillStyle:fillStyle,
+	});
+});
+//画笔
+$("#drawPen").click(function(){
+	drawUtil.begin(1);
+});
+//箭头
+$("#drawArror").click(function(){
+	drawUtil.begin(21);
+});
+//线条
+$("#drawLine").click(function(){
+	drawUtil.begin(2);
+});
+
+//三角形
+$("#drawTriangle").click(function(){
+	drawUtil.begin(3);
+});
+//矩形
+$("#drawRect").click(function(){
+	drawUtil.begin(4);
+});
+//平行四边形
+$("#drawParallel").click(function(){
+	drawUtil.begin(41);
+});
+$("#drawTrape").click(function(){
+	drawUtil.begin(42);
+});
+//多边形
+$("#drawPolygon").click(function(){
+	drawUtil.begin(5);
+});
+//绘制圆
+$("#drawCircle").click(function(){
+	drawUtil.begin(6);
+});
+//取消绘制
+$("#no-drawing").click(function(){
+	drawUtil.hand();
+});
+
+//取消绘制
+$("#clearAll").click(function(){
+	drawUtil.clear();
+});
+
+$("#cancel").click(function(){
+	parent.layer.closeAll();
+});
+$('#drawPolygon').popover();
+</script>
+
+</html>
